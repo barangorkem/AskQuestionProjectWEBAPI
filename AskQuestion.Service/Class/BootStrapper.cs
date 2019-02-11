@@ -1,4 +1,5 @@
 ﻿using AskQuestion.Core.Infrastructure;
+using AskQuestion.Core.Repository;
 using Autofac;
 using Autofac.Integration.WebApi;
 using System;
@@ -22,7 +23,7 @@ namespace AskQuestion.Service.Class
 
             var builder = new ContainerBuilder();
 
-            //builder.RegisterType<UserRepository>().As<IUserRepository>();
+            builder.RegisterType<QuestionRepository>().As<IQuestionRepository>();
 
             builder.RegisterApiControllers(typeof(WebApiApplication).Assembly); //Register WebApi Controllers
 

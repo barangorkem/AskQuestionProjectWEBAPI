@@ -27,7 +27,7 @@ namespace AskQuestion.Service.Controllers
             var store = new UserStore<ApplicationUser>(_context);
             _userManager = new UserManager<ApplicationUser>(store);
         }
-
+        [Authorize]
         [HttpGet]
         [Route("api/user/GetUserClaims")]
         

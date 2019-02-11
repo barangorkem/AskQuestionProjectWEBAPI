@@ -17,7 +17,7 @@ namespace AskQuestion.Core.Infrastructure
 
         IQueryable<T> GetMany(Expression<Func<T, bool>> expression);
 
-        void Insert(T obj);
+        bool Insert(T obj);
 
         void Update(T obj);
 

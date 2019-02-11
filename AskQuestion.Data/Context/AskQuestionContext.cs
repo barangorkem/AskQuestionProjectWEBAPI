@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNet.Identity.EntityFramework;
+﻿using AskQuestion.Data.Model;
+using Microsoft.AspNet.Identity.EntityFramework;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
@@ -13,6 +14,8 @@ namespace AskQuestion.Data.Models
         public string FirstName { get; set; }
 
         public string LastName { get; set; }
+
+        public ICollection<Question> Question { get; set; }
     }
 
     public class ApplicationDbContext:IdentityDbContext<ApplicationUser>
@@ -23,6 +26,7 @@ namespace AskQuestion.Data.Models
             var ensureDLLIsCopied =
                System.Data.Entity.SqlServer.SqlProviderServices.Instance;
         }
+        public DbSet<Question> Question { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
