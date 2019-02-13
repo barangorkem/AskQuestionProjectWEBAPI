@@ -67,19 +67,19 @@ namespace AskQuestion.Service.Controllers
 
         [Authorize(Roles ="Admin")]
         [HttpDelete]
-        [Route("api/user/delete/{id}")]
-        public IdentityResult DeleteUser(string id)
+        [Route("api/user/delete/{username}")]
+        public IdentityResult DeleteUser(string username)
         {
          
-            var user = _userManager.FindById(id);
-            var rolesForUser =  _userManager.GetRoles(id);
+            var user = _userManager.FindByName(username);
+            var rolesForUser =  _userManager.GetRoles(user.Id);
             string[] rolesArray=new string[rolesForUser.Count];
            
             for(int i=0;i<rolesForUser.Count();i++)
             {
                 rolesArray[i] = rolesForUser.ElementAt(i).ToString();
             }
-            var remFromRole = _userManager.RemoveFromRoles(id, rolesArray);
+            var remFromRole = _userManager.RemoveFromRoles(user.Id, rolesArray);
             
             if(remFromRole.Succeeded)
             {
@@ -102,10 +102,11 @@ namespace AskQuestion.Service.Controllers
 
         [Authorize(Roles = "Admin")]
         [HttpPut]
-        [Route("api/user/update/{id}")]
-        public IdentityResult UpdateUser(User obj,string id)
+        [Route("api/user/update/{username}")]
+        public IdentityResult UpdateUser(User obj,string username)
         {
-            ApplicationUser user = _userManager.FindById(id);
+            ApplicationUser user = _userManager.FindByName(username);
+            
             user.FirstName = obj.FirstName;
             user.LastName = obj.LastName;
             user.Email = obj.Email;

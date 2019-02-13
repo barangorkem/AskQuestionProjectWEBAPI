@@ -24,6 +24,7 @@ namespace AskQuestion.Service.Class
             var builder = new ContainerBuilder();
 
             builder.RegisterType<QuestionRepository>().As<IQuestionRepository>();
+            builder.RegisterType<CategoryRepository>().As<ICategoryRepository>();
 
             builder.RegisterApiControllers(typeof(WebApiApplication).Assembly); //Register WebApi Controllers
 

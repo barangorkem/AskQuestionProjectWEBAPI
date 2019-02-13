@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -17,15 +18,15 @@ namespace AskQuestion.Core.Infrastructure
 
         IQueryable<T> GetMany(Expression<Func<T, bool>> expression);
 
-        bool Insert(T obj);
+        void Insert(T obj);
 
         void Update(T obj);
 
         void Delete(int id);
 
-        int count();
+        int Count();
 
-        void save();
+        void Save();
 
         
     }

@@ -27,6 +27,8 @@ namespace AskQuestion.Data.Models
                System.Data.Entity.SqlServer.SqlProviderServices.Instance;
         }
         public DbSet<Question> Question { get; set; }
+        public DbSet<Category> Category { get; set; }
+
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {

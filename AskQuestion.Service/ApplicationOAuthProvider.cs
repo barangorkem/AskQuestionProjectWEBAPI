@@ -1,6 +1,7 @@
 ﻿using AskQuestion.Data.Models;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
+using Microsoft.Owin.Security;
 using Microsoft.Owin.Security.OAuth;
 using System;
 using System.Collections.Generic;
@@ -27,11 +28,26 @@ namespace AskQuestion.Service
             {
                 //assdadsadsadsa
                 var identity = new ClaimsIdentity(context.Options.AuthenticationType);
+                identity.AddClaim(new Claim("Id", user.Id));
                 identity.AddClaim(new Claim("Username", user.UserName));
                 identity.AddClaim(new Claim("Email", user.Email));
                 identity.AddClaim(new Claim("FirstName", user.FirstName));
                 identity.AddClaim(new Claim("LastName", user.LastName));
                 identity.AddClaim(new Claim("LoggedOn", DateTime.Now.ToString()));
+                var userRoles = manager.GetRoles(user.Id);
+                foreach(string roleName in userRoles)
+                {
+                    identity.AddClaim(new Claim(ClaimTypes.Role, roleName));
+
+                }
+                var additionalData = new AuthenticationProperties(new Dictionary<string, string>
+                {
+                    {
+                        "role",Newtonsoft.Json.JsonConvert.SerializeObject(userRoles)
+                    }
+                });
+                var token = new AuthenticationTicket(identity, additionalData);
+
                 context.Validated(identity);
 
             }

@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -20,7 +21,10 @@ namespace AskQuestion.Data.Model
         [Required(ErrorMessage ="Gereklidir.")]
         public string QuestionTime { get; set; }
 
-        [Required]
+        public int? CategoryId { get; set; }
+
+        public Category Category { get; set; }
+
         public string Id { get; set; }
 
         public ApplicationUser ApplicationUser { get; set; }

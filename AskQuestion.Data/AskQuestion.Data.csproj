@@ -81,7 +81,16 @@
     <Compile Include="Migrations\201902110003096_CreateQuestionTableAndRelationshipApplicationUser.Designer.cs">
       <DependentUpon>201902110003096_CreateQuestionTableAndRelationshipApplicationUser.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201902120134518_DeleteQuestionIdRequired.cs" />
+    <Compile Include="Migrations\201902120134518_DeleteQuestionIdRequired.Designer.cs">
+      <DependentUpon>201902120134518_DeleteQuestionIdRequired.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201902122215304_CreateCategoryTableAndRelationshipQuestion.cs" />
+    <Compile Include="Migrations\201902122215304_CreateCategoryTableAndRelationshipQuestion.Designer.cs">
+      <DependentUpon>201902122215304_CreateCategoryTableAndRelationshipQuestion.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Model\Category.cs" />
     <Compile Include="Model\Question.cs" />
     <Compile Include="Model\User.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -101,6 +110,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201902110003096_CreateQuestionTableAndRelationshipApplicationUser.resx">
       <DependentUpon>201902110003096_CreateQuestionTableAndRelationshipApplicationUser.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201902120134518_DeleteQuestionIdRequired.resx">
+      <DependentUpon>201902120134518_DeleteQuestionIdRequired.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201902122215304_CreateCategoryTableAndRelationshipQuestion.resx">
+      <DependentUpon>201902122215304_CreateCategoryTableAndRelationshipQuestion.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

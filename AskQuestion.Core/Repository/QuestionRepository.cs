@@ -6,6 +6,8 @@ using System.Collections.Generic;
 using System.Data.Entity.Migrations;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Net;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -14,8 +16,10 @@ namespace AskQuestion.Core.Repository
 {
     public class QuestionRepository : IQuestionRepository
     {
+        
+
         ApplicationDbContext _context = new ApplicationDbContext();
-        public int count()
+        public int Count()
         {
            return _context.Question.Count();
         }
@@ -27,7 +31,7 @@ namespace AskQuestion.Core.Repository
             {
                 _context.Question.Remove(question);
             }
-            save();
+       
         }
 
         public Question Get(Expression<Func<Question, bool>> expressions)
@@ -50,21 +54,15 @@ namespace AskQuestion.Core.Repository
             return _context.Question.Where(expression);
         }
 
-        public bool Insert(Question obj)
+        public void Insert(Question obj)
         {
-            try
-            {
+          
                 _context.Question.Add(obj);
-                save();
-                return true;
-            }catch(Exception e)
-            {
-                return false;
-            }
+
            
         }
 
-        public void save()
+        public void Save()
         {
             _context.SaveChanges();
         }
@@ -72,7 +70,7 @@ namespace AskQuestion.Core.Repository
         public void Update(Question obj)
         {
             _context.Question.AddOrUpdate(obj);
-            save();
+          
         }
     }
 }

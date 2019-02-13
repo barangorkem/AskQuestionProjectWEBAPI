@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Security.Claims;
 using System.Web.Http;
 
 namespace AskQuestion.Service.Controllers
@@ -16,12 +17,26 @@ namespace AskQuestion.Service.Controllers
         {
             _questionRepository = questionRepository;
         }
+        [Authorize(Roles ="Admin")]
         [HttpPost]
         [Route("api/question/insert")]
-        public bool Insert(Question question)
+        public HttpResponseMessage Insert(Question question)
         {
-            bool isTrue=_questionRepository.Insert(question);
-            return isTrue;
+            try
+            {
+
+                var identityClaims = (ClaimsIdentity)User.Identity;
+                IEnumerable<Claim> claims = identityClaims.Claims;
+                question.Id = identityClaims.FindFirst("Id").Value;
+                _questionRepository.Insert(question);
+                _questionRepository.Save();
+                return new HttpResponseMessage(HttpStatusCode.OK);
+
+            }
+            catch
+            {
+                return new HttpResponseMessage(HttpStatusCode.BadRequest);
+            }
         }
     }
 }
