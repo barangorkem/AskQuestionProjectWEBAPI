@@ -7,7 +7,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
-
+using System.Data.Entity;
 namespace AskQuestion.Core.Repository
 {
     public class CategoryRepository : ICategoryRepository
@@ -30,17 +30,17 @@ namespace AskQuestion.Core.Repository
 
         public IEnumerable<Category> GetAll()
         {
-            return _context.Category.Select(x => x);
+            return _context.Category.Include(x => x.Question);
         }
 
         public Category GetById(int id)
         {
-           return _context.Category.FirstOrDefault(x => x.CategoryId == id);
+            return _context.Category.FirstOrDefault(x => x.CategoryId == id);
         }
 
-        public IQueryable<Category> GetMany(Expression<Func<Category, bool>> expression)
+        public IEnumerable<Category> GetMany(Expression<Func<Category, bool>> expression)
         {
-            return _context.Category.Where(expression);
+            return _context.Category.Include(x => x.Question).Where(expression);
         }
 
         public void Insert(Category obj)

@@ -10,6 +10,7 @@ using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using System.Data.Entity;
 
 
 namespace AskQuestion.Core.Repository
@@ -18,7 +19,7 @@ namespace AskQuestion.Core.Repository
     {
         
 
-        ApplicationDbContext _context = new ApplicationDbContext();
+         ApplicationDbContext _context = new ApplicationDbContext();
         public int Count()
         {
            return _context.Question.Count();
@@ -47,12 +48,38 @@ namespace AskQuestion.Core.Repository
         public Question GetById(int id)
         {
             return _context.Question.FirstOrDefault(x => x.QuestionId == id);
+          
         }
 
-        public IQueryable<Question> GetMany(Expression<Func<Question, bool>> expression)
+        public IEnumerable<Question> GetMany(Expression<Func<Question, bool>> expression)
         {
-            return _context.Question.Where(expression);
+            IEnumerable<Question> question = _context.Question.Where(expression);
+            var entryPoint = (from ep in question
+                              join e in _context.Category on ep.CategoryId equals e.CategoryId
+                              join t in _context.Users on ep.Id equals t.Id
+                              select new Question
+                              {
+                                  QuestionId = ep.QuestionId,
+                                  QuestionTitle = ep.QuestionTitle,
+                                  QuestionTime = ep.QuestionTime,
+                                  Category=new Category
+                                  {
+                                      CategoryId=e.CategoryId,
+                                      CategoryName=e.CategoryName,
+                                      Question=null,
+                                  },
+                                  ApplicationUser=new ApplicationUser
+                                  {
+                                      UserName=t.UserName,
+                                      Question=null,
+                                      Id=t.Id
+
+                                  }
+                              }).ToList();
+            return entryPoint;
         }
+
+       
 
         public void Insert(Question obj)
         {

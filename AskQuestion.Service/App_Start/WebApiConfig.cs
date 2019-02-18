@@ -11,9 +11,11 @@ namespace AskQuestion.Service
         public static void Register(HttpConfiguration config)
         {
             // Web API configuration and services
-           
-           //config.EnableCors(new EnableCorsAttribute("http://localhost:3000", headers: "*", methods: "*"));
-           
+
+            //config.EnableCors(new EnableCorsAttribute("http://localhost:3000", headers: "*", methods: "*"));
+            var json = config.Formatters.JsonFormatter;
+            json.SerializerSettings.PreserveReferencesHandling = Newtonsoft.Json.PreserveReferencesHandling.Objects;
+            config.Formatters.Remove(config.Formatters.XmlFormatter);
             // Web API routes
             config.MapHttpAttributeRoutes();
 

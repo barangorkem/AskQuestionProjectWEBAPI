@@ -33,7 +33,6 @@ namespace AskQuestion.Service.Controllers
             }
             
         }
-        [Authorize]
         [HttpGet]
         [Route("api/category/listcategory")]
         public IEnumerable<Category> ListCategory()
@@ -44,6 +43,17 @@ namespace AskQuestion.Service.Controllers
                 CategoryName=x.CategoryName,
                 CategoryId=x.CategoryId
             }); 
+
+        }
+      
+        [HttpGet]
+        [Route("api/category/getAll")]
+        public IEnumerable<Category> getAll()
+        {
+
+            IEnumerable<Category> categories = _categoryRepository.GetAll();
+
+            return categories;
 
         }
         //[Authorize(Roles ="Admin")]

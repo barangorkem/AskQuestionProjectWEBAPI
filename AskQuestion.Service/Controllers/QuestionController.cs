@@ -13,18 +13,18 @@ namespace AskQuestion.Service.Controllers
     public class QuestionController : ApiController
     {
         private readonly IQuestionRepository _questionRepository;
+        
         public QuestionController(IQuestionRepository questionRepository)
         {
             _questionRepository = questionRepository;
         }
-        [Authorize(Roles ="Admin")]
+        [Authorize]
         [HttpPost]
         [Route("api/question/insert")]
         public HttpResponseMessage Insert(Question question)
         {
             try
             {
-
                 var identityClaims = (ClaimsIdentity)User.Identity;
                 IEnumerable<Claim> claims = identityClaims.Claims;
                 question.Id = identityClaims.FindFirst("Id").Value;
@@ -38,5 +38,15 @@ namespace AskQuestion.Service.Controllers
                 return new HttpResponseMessage(HttpStatusCode.BadRequest);
             }
         }
+        [HttpGet]
+        [Route("api/question/getQuestions/{CategoryId}")]
+        public IEnumerable<Question> GetQuestions(int CategoryId)
+
+        {
+            IEnumerable<Question> questions = _questionRepository.GetMany(x=>x.CategoryId==CategoryId);
+            
+            return questions;
+        }
+
     }
 }

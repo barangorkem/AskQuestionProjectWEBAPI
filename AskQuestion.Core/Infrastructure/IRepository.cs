@@ -16,7 +16,7 @@ namespace AskQuestion.Core.Infrastructure
 
         T Get(Expression<Func<T, bool>> expressions);
 
-        IQueryable<T> GetMany(Expression<Func<T, bool>> expression);
+        IEnumerable<T> GetMany(Expression<Func<T, bool>> expression);
 
         void Insert(T obj);
 
