@@ -1,5 +1,6 @@
 ﻿using AskQuestion.Core.Infrastructure;
 using AskQuestion.Data.Model;
+using AskQuestion.Service.Class;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -40,13 +41,68 @@ namespace AskQuestion.Service.Controllers
         }
         [HttpGet]
         [Route("api/question/getQuestions/{CategoryId}")]
-        public IEnumerable<Question> GetQuestions(int CategoryId)
+        public HttpResponseMessage GetQuestions(int CategoryId)
 
         {
-            IEnumerable<Question> questions = _questionRepository.GetMany(x=>x.CategoryId==CategoryId);
-            
-            return questions;
-        }
+            IEnumerable<QuestionInfo> questions = _questionRepository.GetMany(x => x.CategoryId == CategoryId).Select(x=>new QuestionInfo()
+            {
+                QuestionId =x.QuestionId,
+                QuestionTime = x.QuestionTime,
+                QuestionTitle = x.QuestionTitle,
+                CategoryId = x.Category.CategoryId,
+                CategoryName = x.Category.CategoryName,
+                UserName = x.ApplicationUser.UserName
+            });
 
+            return Request.CreateResponse(HttpStatusCode.OK, questions);
+        }
+        [Authorize(Roles ="Admin")]
+        [HttpGet]
+        [Route("api/question/deleteQuestion/{QuestionId}")]
+        public bool DeleteQuestion(int QuestionId)
+        {
+            Question question = _questionRepository.GetById(QuestionId);
+            if(question!=null)
+            {
+                _questionRepository.Delete(QuestionId);
+                _questionRepository.Save();
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+
+        }
+        [HttpGet]
+        [Route("api/question/get/{id}")]
+        public HttpResponseMessage Get(int id)
+        {
+            try
+            {
+                Question question = _questionRepository.GetById(id);
+                if (question!=null)
+                {
+
+                    QuestionInfo questionInfo = new QuestionInfo()
+                    {
+                        QuestionId = question.QuestionId,
+                        QuestionTime = question.QuestionTime,
+                        QuestionTitle = question.QuestionTitle,
+                        CategoryId = question.Category.CategoryId,
+                        CategoryName = question.Category.CategoryName,
+                        UserName = question.ApplicationUser.UserName
+                    };
+                    return Request.CreateResponse(HttpStatusCode.OK, questionInfo);
+                }
+               else
+                {
+                    return Request.CreateResponse(HttpStatusCode.NotFound, "Bulunamadı");
+                }
+            }catch(Exception e)
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, e);
+            }
+        }
     }
 }

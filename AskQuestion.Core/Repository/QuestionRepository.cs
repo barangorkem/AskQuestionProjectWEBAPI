@@ -47,8 +47,31 @@ namespace AskQuestion.Core.Repository
 
         public Question GetById(int id)
         {
-            return _context.Question.FirstOrDefault(x => x.QuestionId == id);
-          
+            IEnumerable<Question> questions = _context.Question.Where(x => x.QuestionId == id);
+            var check= (from t in questions
+                       join d in _context.Category
+                    on t.CategoryId equals d.CategoryId
+                   join x in _context.Users
+                   on  t.Id equals x.Id 
+                   select new Question
+                   {
+                      QuestionId=t.QuestionId,
+                      QuestionTitle=t.QuestionTitle,
+                      QuestionTime=t.QuestionTime,
+                      Category=new Category
+                      {
+                          CategoryId= d.CategoryId,
+                          CategoryName=d.CategoryName
+                      },
+                      ApplicationUser=new ApplicationUser
+                      {
+                          UserName=x.UserName
+                      }
+                      
+                   }).ToList();
+            return check.FirstOrDefault(x=>x.QuestionId==id);
+
+
         }
 
         public IEnumerable<Question> GetMany(Expression<Func<Question, bool>> expression)
@@ -65,15 +88,12 @@ namespace AskQuestion.Core.Repository
                                   Category=new Category
                                   {
                                       CategoryId=e.CategoryId,
-                                      CategoryName=e.CategoryName,
-                                      Question=null,
+                                      CategoryName=e.CategoryName
                                   },
                                   ApplicationUser=new ApplicationUser
                                   {
                                       UserName=t.UserName,
-                                      Question=null,
-                                      Id=t.Id
-
+                                      Id=null
                                   }
                               }).ToList();
             return entryPoint;

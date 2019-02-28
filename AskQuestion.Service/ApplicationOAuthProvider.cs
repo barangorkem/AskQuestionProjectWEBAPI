@@ -5,6 +5,7 @@ using Microsoft.Owin.Security;
 using Microsoft.Owin.Security.OAuth;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -48,13 +49,37 @@ namespace AskQuestion.Service
                 });
                 var token = new AuthenticationTicket(identity, additionalData);
 
-                context.Validated(identity);
+                context.Validated(token);
 
             }
             else
             {
                 return;
             }
+        }
+        public override Task TokenEndpoint(OAuthTokenEndpointContext context)
+        {
+            foreach(KeyValuePair<string,string> property in context.Properties.Dictionary)
+            {
+                TimeSpan span = DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1, 0, 0, 0));
+
+                if (property.Key == ".issued")
+                {
+                    context.AdditionalResponseParameters.Add(".issued", span.TotalMilliseconds);
+
+                }
+                else if (property.Key == ".expires")
+                {
+                    context.AdditionalResponseParameters.Add(".expires",span.TotalMilliseconds + 3600*1000);
+                  
+
+                }
+                else
+                {
+                    context.AdditionalResponseParameters.Add(property.Key, property.Value);
+                }
+            }
+            return Task.FromResult<object>(null);
         }
 
     }
